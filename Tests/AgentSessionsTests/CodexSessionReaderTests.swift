@@ -39,9 +39,9 @@ struct CodexRoleTests {
                 expected: .assistant
             ),
             TestCase(
-                description: "response_item role=user → nil",
+                description: "response_item role=user → .user",
                 jsonl: #"{"type":"response_item","payload":{"type":"message","role":"user","content":[{"type":"input_text","text":"question"}]}}"#,
-                expected: nil
+                expected: .user
             ),
             TestCase(
                 description: "response_item role=developer → nil",
@@ -206,6 +206,26 @@ struct CodexSessionTests {
         #expect(msgs[2].content == "Add tests")
         #expect(msgs[3].role == .assistant)
         #expect(msgs[3].content == "Done! Tests added.")
+    }
+
+    @Test("loadSession surfaces response_item(role=user) turns and skips developer entries")
+    func loadParsesResponseItemUsers() async throws {
+        var fixture = Fixture()
+        _ = fixture.configureRollout(
+            named: "rollout-resp.jsonl",
+            jsonl: TestFixtures.codexJSONLResponseItemUsers()
+        )
+        let conversation = try #require(
+            try await fixture.makeReader().loadSession(id: "codex-response-user")
+        )
+        let msgs = conversation.messages
+        // The developer entry is dropped; both user turns and the assistant turn survive.
+        #expect(msgs.count == 3)
+        #expect(msgs[0].role == .user)
+        #expect(msgs[0].content == "Build a function")
+        #expect(msgs[1].role == .assistant)
+        #expect(msgs[2].role == .user)
+        #expect(msgs[2].content == "Add tests")
     }
 
     @Test("loadSession limit returns only the most recent messages")
