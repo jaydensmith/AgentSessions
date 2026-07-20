@@ -69,7 +69,9 @@ public struct KimiCodeSessionReader: Sendable {
 
 extension KimiCodeSessionReader: SessionReader {
     public func listSessions() async throws -> [SessionSummary] {
-        indexEntries().map { entry in summary(for: entry) }
+        await SessionSummaryCollector.collect(indexEntries()) { entry in
+            summary(for: entry)
+        }
     }
 
     public func loadSession(id: String, storagePath: String?, limit: Int?) async throws -> UnifiedConversation? {
