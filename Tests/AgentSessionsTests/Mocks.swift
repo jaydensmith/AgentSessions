@@ -212,7 +212,8 @@ enum TestFixtures {
     }
 
     /// kimi-code wire.jsonl: two real user turns plus injected noise and a multi-part assistant turn.
-    /// `background_task`/`injection` user-role append_messages must NOT surface as user messages.
+    /// All `append_message` lines are skipped by the reader, so the `background_task`/`injection`
+    /// user-role ones must NOT surface as user messages.
     static func kimiWireJSONL() -> String {
         """
         {"type":"metadata","protocol_version":"1.4","created_at":1784512258248}

@@ -16,7 +16,8 @@ public struct KimiCodeSessionReader: Sendable {
         indexFile = root.appendingPathComponent("session_index.jsonl")
     }
 
-    /// User turns come from `turn.prompt`; a `role==user` `append_message` may be injection/skill/background noise.
+    /// User turns come only from `turn.prompt`. `context.append_message` lines are skipped wholesale:
+    /// real prompts never arrive that way, and `role==user` ones are injection/skill/background noise.
     /// Assistant text streams in order between prompts, not `turnId`-paired, so an unmatched turn can't shift replies.
     static func messages(fromWire lines: [KimiWireLine]) -> [UnifiedMessage] {
         var messages: [UnifiedMessage] = []

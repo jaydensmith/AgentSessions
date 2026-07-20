@@ -24,7 +24,7 @@ struct KimiCodeSessionReaderTests {
         #expect(entry.event?.part?.text == "Answer")
     }
 
-    @Test("Wire parsing keeps only real user turns and groups assistant text by turnId")
+    @Test("Wire parsing keeps only real user turns and accumulates assistant text between prompts")
     func parseWireMessages() {
         let lines = JSONLParser.decodeLines(TestFixtures.kimiWireJSONL(), as: KimiWireLine.self)
         let messages = KimiCodeSessionReader.messages(fromWire: lines)
