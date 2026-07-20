@@ -142,10 +142,10 @@ extension KimiCodeSessionReader: SessionReader {
             lastMessageAt: messages.last?.timestamp,
             model: Self.model(fromWire: wire),
             messageCount: messages.count,
-            lastUserMessage: userMessages.last,
+            lastUserMessage: MessageFilter.lastMeaningful(userMessages),
             byteSize: FileSystemHelper.fileSize(wireFile, fileSystem: fileSystem),
             storagePath: sessionDir.path,
-            initialPrompt: userMessages.first
+            initialPrompt: MessageFilter.firstMeaningful(userMessages)
         )
     }
 }

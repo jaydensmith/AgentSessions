@@ -161,6 +161,19 @@ struct KimiCodeSessionReaderTests {
         #expect(convo.messages.count == 4)              // wire still parses
     }
 
+    @Test("Summary prompt fields skip system-injected noise prompts")
+    func summarySkipsNoisePrompts() async throws {
+        let wire = """
+        {"type":"turn.prompt","input":[{"type":"text","text":"<user_query>injected</user_query>"}],"origin":{"kind":"user"},"time":1}
+        {"type":"turn.prompt","input":[{"type":"text","text":"Real question"}],"origin":{"kind":"user"},"time":2}
+        """
+        let fs = MockFileManager(); let home = URL(fileURLWithPath: "/Users/tester"); fs.homeDirectoryForCurrentUser = home
+        TestFixtures.installKimiSession(into: fs, home: home, wire: wire)
+        let summary = try #require(try await KimiCodeSessionReader(fileSystem: fs).listSessions().first)
+        #expect(summary.initialPrompt == "Real question")
+        #expect(summary.lastUserMessage == "Real question")
+    }
+
     @Test("SessionReaderFactory includes a kimi-code reader")
     func factoryIncludesKimiCode() {
         let readers = SessionReaderFactory.make(fileSystem: MockFileManager(), sqlite: MockSQLiteReader())
