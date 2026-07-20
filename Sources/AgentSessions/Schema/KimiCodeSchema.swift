@@ -33,7 +33,6 @@ struct KimiWireLine: Decodable {
     let modelAlias: String?
     let input: [KimiTextPart]?
     let origin: KimiOrigin?
-    let message: KimiMessage?
     let event: KimiLoopEvent?
 }
 
@@ -44,12 +43,6 @@ struct KimiTextPart: Decodable {
 
 struct KimiOrigin: Decodable {
     let kind: String?
-}
-
-struct KimiMessage: Decodable {
-    let role: String?
-    let content: [KimiTextPart]?
-    let origin: KimiOrigin?
 }
 
 struct KimiLoopEvent: Decodable {

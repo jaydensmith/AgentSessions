@@ -115,12 +115,10 @@ func kimiCodeAgentSourceRawValue() {
     #expect(AgentSource.allCases.contains(.kimiCode))
 }
 
-@Test("DateUtils converts epoch milliseconds to Date and back")
-func epochMillisRoundTrip() {
-    let millis = 1_784_512_258_248
-    let date = DateUtils.date(fromEpochMillis: millis)
+@Test("DateUtils converts epoch milliseconds to Date")
+func epochMillisConversion() {
+    let date = DateUtils.date(fromEpochMillis: 1_784_512_258_248)
     #expect(date.timeIntervalSince1970 == 1_784_512_258.248)
-    #expect(DateUtils.epochMillis(from: date) == millis)
 }
 
 @Suite("Verifies human-readable byte count formatting.")

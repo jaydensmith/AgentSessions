@@ -52,8 +52,4 @@ public enum DateUtils: Sendable {
     public static func date(fromEpochMillis millis: Int) -> Date {
         Date(timeIntervalSince1970: Double(millis) / millisPerSecond)
     }
-
-    public static func epochMillis(from date: Date) -> Int {
-        Int((date.timeIntervalSince1970 * millisPerSecond).rounded())
-    }
 }
